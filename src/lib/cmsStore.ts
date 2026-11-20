@@ -52,6 +52,7 @@ function getStoredItem<T>(key: string, defaultValue: T): T {
     if (key === STORAGE_KEYS.PAGES && Array.isArray(parsed)) {
       const homePage = parsed.find((p: any) => p.id === 'page-home');
       if (homePage) {
+        homePage.template = 'default1';
         // Remove institutional showcase if present
         homePage.sections = homePage.sections.filter((s: any) => s.id !== 'sec-home-carousel');
 
@@ -70,8 +71,17 @@ function getStoredItem<T>(key: string, defaultValue: T): T {
             items: initialPartners.content.items,
           };
         }
-        window.localStorage.setItem(key, JSON.stringify(parsed));
       }
+
+      // Ensure page-home-t2 exists for Template 2 editing
+      if (!parsed.some((p: any) => p.id === 'page-home-t2')) {
+        const t2Home = (defaultValue as any[]).find((p: any) => p.id === 'page-home-t2');
+        if (t2Home) {
+          parsed.push(t2Home);
+        }
+      }
+
+      window.localStorage.setItem(key, JSON.stringify(parsed));
     }
     return parsed;
   } catch (e) {
@@ -321,6 +331,21 @@ export function useCMS() {
     setStoredItem(STORAGE_KEYS.SETTINGS, newSettings);
   };
 
+  const setActiveTemplate = (templateId: 'default1' | 'default2') => {
+    const updated: WebsiteSettings = {
+      ...settings,
+      activeTemplate: templateId,
+      templates: {
+        ...(settings.templates || {}),
+        [templateId]: {
+          ...((settings.templates && settings.templates[templateId]) || {}),
+          lastUpdated: new Date().toISOString(),
+        },
+      },
+    };
+    saveSettings(updated);
+  };
+
   // Reset all to defaults
   const resetToFactoryDefaults = () => {
     setPages(initialPages);
@@ -408,8 +433,9 @@ export function useCMS() {
     // Content ops
     saveContentRecord,
     deleteContentRecord,
-    // Settings ops
+    // Settings & Template ops
     saveSettings,
+    setActiveTemplate,
     resetToFactoryDefaults,
     // Hierarchical visibility checks
     isEffectiveWebsiteEnabled,

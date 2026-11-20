@@ -6,12 +6,28 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/data/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        paper: "#F7F6F2",
+        "paper-alt": "#EFECE6",
+        surface: "#FFFFFF",
+        dark: "#20211F",
+        "dark-alt": "#181917",
+        ink: "#191919",
+        muted: "#66645F",
+        accent: {
+          DEFAULT: "#1B633E",
+          dark: "#144D30",
+        },
+        line: {
+          DEFAULT: "#DCD9D1",
+          dark: "#343532",
+        },
         legal: {
           50: "#f2f7f4",
           100: "#e1ede6",
@@ -28,12 +44,13 @@ export default {
         gold: {
           500: "#c5a880",
           600: "#b09166",
-        }
+        },
       },
       fontFamily: {
-        serif: ["var(--font-serif)", "Georgia", "serif"],
-        sans: ["var(--font-sans)", "Inter", "sans-serif"],
-      }
+        serif: ["var(--font-cormorant)", "var(--font-serif)", "Playfair Display", "Georgia", "serif"],
+        sans: ["var(--font-inter)", "var(--font-sans)", "Inter", "sans-serif"],
+        devanagari: ["var(--font-devanagari)", "Noto Serif Devanagari", "Noto Sans Devanagari", "sans-serif"],
+      },
     },
   },
   plugins: [],

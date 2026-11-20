@@ -14,6 +14,8 @@ import {
   AlertTriangle,
   Globe,
   Sliders,
+  LayoutTemplate,
+  Sparkles,
 } from 'lucide-react';
 
 export default function WebsiteSettingsPage() {
@@ -88,6 +90,96 @@ export default function WebsiteSettingsPage() {
               </span>
             </div>
           )}
+        </div>
+
+        {/* Active UI Template Selector */}
+        <div className="p-6 rounded-xl bg-white border border-stone-200 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+            <div className="flex items-center gap-2">
+              <LayoutTemplate className="w-5 h-5 text-legal-700" />
+              <div>
+                <h3 className="font-serif font-bold text-base text-stone-900">
+                  Published UI Template
+                </h3>
+                <p className="text-xs text-stone-500 mt-0.5">
+                  Select which layout template is active for public visitors. Only one template is published at a time.
+                </p>
+              </div>
+            </div>
+            <a
+              href="/admin/templates"
+              className="text-xs font-semibold text-legal-800 hover:text-gold-600 flex items-center gap-1"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-gold-500" />
+              <span>Full Template Manager →</span>
+            </a>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4 pt-1">
+            <label
+              className={`p-4 rounded-lg border-2 cursor-pointer flex flex-col justify-between transition-all ${
+                (formState.activeTemplate || 'default1') === 'default1'
+                  ? 'border-legal-800 bg-legal-50/50 text-legal-950 shadow-xs'
+                  : 'border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-300'
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-legal-600 block">Slot 01</span>
+                  <span className="font-serif font-bold text-sm block mt-0.5">Default 1: Classic Law Firm</span>
+                  <span className="text-xs text-stone-500 block mt-1">
+                    Vanguard &amp; Sterling layout with hero slider, cards &amp; partner carousel.
+                  </span>
+                </div>
+                <input
+                  type="radio"
+                  name="activeTemplate"
+                  value="default1"
+                  checked={(formState.activeTemplate || 'default1') === 'default1'}
+                  onChange={() => setFormState({ ...formState, activeTemplate: 'default1' })}
+                  className="mt-1 accent-legal-800"
+                />
+              </div>
+              <div className="mt-3 pt-2 border-t border-stone-200/60 flex items-center justify-between text-[11px]">
+                <span className="text-stone-500">Theme: Forest &amp; Gold</span>
+                {(formState.activeTemplate || 'default1') === 'default1' && (
+                  <span className="font-semibold text-emerald-700">● Published</span>
+                )}
+              </div>
+            </label>
+
+            <label
+              className={`p-4 rounded-lg border-2 cursor-pointer flex flex-col justify-between transition-all ${
+                formState.activeTemplate === 'default2'
+                  ? 'border-legal-800 bg-legal-50/50 text-legal-950 shadow-xs'
+                  : 'border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-300'
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-700 block">Slot 02</span>
+                  <span className="font-serif font-bold text-sm block mt-0.5">Default 2: Editorial Research Chambers</span>
+                  <span className="text-xs text-stone-500 block mt-1">
+                    Law Chambers layout with rotating orbital cards, chronology milestones &amp; 13 practice drawers.
+                  </span>
+                </div>
+                <input
+                  type="radio"
+                  name="activeTemplate"
+                  value="default2"
+                  checked={formState.activeTemplate === 'default2'}
+                  onChange={() => setFormState({ ...formState, activeTemplate: 'default2' })}
+                  className="mt-1 accent-legal-800"
+                />
+              </div>
+              <div className="mt-3 pt-2 border-t border-stone-200/60 flex items-center justify-between text-[11px]">
+                <span className="text-stone-500">Theme: Parchment &amp; Forest Green</span>
+                {formState.activeTemplate === 'default2' && (
+                  <span className="font-semibold text-emerald-700">● Published</span>
+                )}
+              </div>
+            </label>
+          </div>
         </div>
 
         {/* General Branding (Section 17) */}

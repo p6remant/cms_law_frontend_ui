@@ -10,7 +10,7 @@ A comprehensive, end-to-end technical reference and operational manual for the *
 2. [Technology Stack & Core Architecture](#2-technology-stack--core-architecture)
 3. [Reactive State Engine & Data Persistence](#3-reactive-state-engine--data-persistence)
 4. [Complete Project & Directory Structure](#4-complete-project--directory-structure)
-5. [Data Models & TypeScript Schema Reference](#5-data-models--typescript-schema-reference)
+5. [Data Models Reference](#5-data-models-reference)
 6. [Public Website Architecture & Dynamic Routing](#6-public-website-architecture--dynamic-routing)
 7. [The 13 Standard Legal Section Types](#7-the-13-standard-legal-section-types)
 8. [Admin CMS Dashboard — Comprehensive Route Reference](#8-admin-cms-dashboard--comprehensive-route-reference)
@@ -22,6 +22,7 @@ A comprehensive, end-to-end technical reference and operational manual for the *
 14. [Input Placeholders vs. Edit Values Standard](#14-input-placeholders-vs-edit-values-standard)
 15. [Step-by-Step Developer Workflows](#15-step-by-step-developer-workflows)
 16. [Verification, Build, & Quality Assurance](#16-verification-build--quality-assurance)
+17. [Multi-Template Architecture & Flow (Default 1 vs. Default 2)](#17-multi-template-architecture--flow-default-1-vs-default-2)
 
 ---
 
@@ -56,31 +57,31 @@ The website and CMS must reflect the gravitas, precision, and confidentiality ex
 ```mermaid
 flowchart TD
     subgraph Storage["Storage Layer"]
-        LS[("localStorage\n(Keyed Stores)")]
-        Init["initialData.ts\n(Demonstration Seed)"]
+        LS[("localStorage (Keyed Stores)")]
+        Init["initialData.ts (Demonstration Seed)"]
     end
 
     subgraph Store["State Engine (src/lib/cmsStore.ts)"]
-        Hook["useCMS() Hook\n(Reactive Client Store)"]
-        Hydrate["SSR Hydration Guard\n(isLoaded state)"]
-        Rules["Visibility Rule Engine\n(Hierarchical checks)"]
+        Hook["useCMS Hook (Reactive Client Store)"]
+        Hydrate["SSR Hydration Guard (isLoaded state)"]
+        Rules["Visibility Rule Engine (Hierarchical checks)"]
     end
 
     subgraph AdminApp["Admin Application (/admin)"]
         PagesList["/admin/pages"]
-        PageBuilder["/admin/pages/[id]\n(Section Builder)"]
-        NavMgr["/admin/navigation\n(Hierarchy & Preview)"]
-        MediaMgr["/admin/media\n(Universal Upload)"]
-        BlogMgr["/admin/blog\n(Legal Briefs)"]
-        SEOMgr["/admin/seo\n(Audit & Preview)"]
-        SettingsMgr["/admin/settings\n(Master Kill Switch)"]
+        PageBuilder["/admin/pages/[id] (Section Builder)"]
+        NavMgr["/admin/navigation (Hierarchy & Preview)"]
+        MediaMgr["/admin/media (Universal Upload)"]
+        BlogMgr["/admin/blog (Legal Briefs)"]
+        SEOMgr["/admin/seo (Audit & Preview)"]
+        SettingsMgr["/admin/settings (Master Kill Switch)"]
     end
 
     subgraph PublicApp["Public Website (/)"]
-        PublicLayout["(website)/layout.tsx\n(Header & Footer)"]
+        PublicLayout["(website)/layout.tsx (Header & Footer)"]
         StaticRoutes["/the-firm, /practice, /partners, /contact"]
-        CatchAll["/[slug]/page.tsx\n(DynamicPageRenderer)"]
-        SectionRenderer["SectionRenderer\n(13 Component Types)"]
+        CatchAll["/[slug]/page.tsx (DynamicPageRenderer)"]
+        SectionRenderer["SectionRenderer (13 Component Types)"]
     end
 
     Init --> LS
@@ -91,6 +92,21 @@ flowchart TD
     Rules --> PublicApp
     PublicLayout --> CatchAll
     CatchAll --> SectionRenderer
+```
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            ARCHITECTURAL FLOW                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+  [initialData.ts] ──► [localStorage] ◄──► [useCMS() Hook in cmsStore.ts]
+                                                    │
+                 ┌──────────────────────────────────┴──────────────────┐
+                 ▼                                                     ▼
+      [Admin Dashboard (/admin)]                         [Public Website (/)]
+      • Pages & Section Builder                          • (website)/layout.tsx
+      • Navigation Hierarchy                             • Catch-all [slug]/page.tsx
+      • Media, Blog & SEO                                • Dynamic SectionRenderer
+      • Master Switches                                  • Template 1 & 2 Renderers
 ```
 
 ---
@@ -233,77 +249,19 @@ c:\Users\RemantaPaudelKhatri\Desktop\Projects\cms\
 
 ---
 
-## 5. Data Models & TypeScript Schema Reference
+## 5. Data Models Reference
 
-### 5.1 Core Page Interface (`Page`)
-```typescript
-export interface Page {
-  id: string;                     // Unique identifier (e.g., 'page-home', 'page-179515...')
-  title: string;                  // Display title (e.g., 'Appellate Litigation')
-  slug: string;                   // URL path identifier (e.g., 'appellate-litigation')
-  description?: string;           // Internal editorial note
-  template: string;               // Starting layout template
-  status: 'draft' | 'published' | 'archived'; // Publication state
-  isVisible: boolean;             // Page-level visibility switch
-  featuredImage?: string;         // Social share / hero banner image
-  sections: PageSection[];        // Ordered array of section instances
-  seo?: SEOSettings;              // Page-specific search metadata
-  updatedAt: string;              // ISO timestamp
-  createdAt: string;              // ISO timestamp
-}
-```
+The CMS data models (defined in `src/types/cms.ts`) represent entities stored in `localStorage` and managed reactively via `cmsStore.ts`:
 
-### 5.2 Page Section Interface (`PageSection`)
-```typescript
-export interface PageSection {
-  id: string;                     // Unique section identifier (e.g., 'sec-179515...')
-  type: SectionType;              // One of 13 supported legal section types
-  name: string;                   // Human-readable section label (e.g., 'Practice Directory')
-  order: number;                  // 1-based vertical position order
-  isVisible: boolean;             // Section-level visibility toggle
-  isReusable: boolean;            // Shared across pages vs. page-specific
-  content: Record<string, any>;   // Type-specific content payload (discriminated union)
-  settings: SectionSettings;      // Background, padding, and container width
-}
-```
-
-### 5.3 Section Settings Interface (`SectionSettings`)
-```typescript
-export interface SectionSettings {
-  backgroundColor?: string;       // Hex or CSS color string (e.g., '#fbfbfa')
-  backgroundImage?: string;       // Background image URL
-  textColor?: string;             // Text color override
-  layout?: 'default' | 'split' | 'centered' | 'grid' | 'cards' | 'timeline';
-  spacing?: {
-    top?: number;                 // Padding-top in rem or px
-    bottom?: number;              // Padding-bottom in rem or px
-  };
-  containerWidth?: 'normal' | 'narrow' | 'wide' | 'full';
-}
-```
-
-### 5.4 Navigation Menu & Items (`NavigationMenu`, `NavigationItem`)
-```typescript
-export interface NavigationItem {
-  id: string;                     // Unique link ID
-  label: string;                  // Menu link display text
-  type: 'page' | 'external' | 'custom';
-  url: string;                    // Target route (e.g., '/practice', 'https://...')
-  order: number;                  // Order among sibling links
-  isVisible: boolean;             // Link visibility
-  isButton: boolean;              // Style as high-conversion CTA button
-  target?: '_self' | '_blank';    // Window target
-  children?: NavigationItem[];    // Nested dropdown items (hierarchical)
-}
-
-export interface NavigationMenu {
-  id: string;                     // Menu ID (e.g., 'nav-main', 'nav-footer')
-  name: string;                   // Label (e.g., 'Header Main Navigation')
-  location: 'header' | 'footer' | 'secondary';
-  isVisible: boolean;             // Master menu visibility toggle
-  items: NavigationItem[];        // Top-level menu links
-}
-```
+| Entity | Primary Identifiers | Key Properties | Purpose |
+| :--- | :--- | :--- | :--- |
+| **`Page`** | `id`, `slug` | `title`, `template`, `status`, `isVisible`, `sections`, `seo` | Top-level webpage containing an ordered list of sections. |
+| **`PageSection`** | `id`, `type` | `name`, `order`, `isVisible`, `isReusable`, `content`, `settings` | Individual modular building block within a page. |
+| **`SectionSettings`** | — | `backgroundColor`, `textColor`, `layout`, `spacing`, `containerWidth` | Visual presentation parameters per section. |
+| **`NavigationMenu`** | `id`, `location` | `name`, `isVisible`, `items` (`NavigationItem[]`) | Header, footer, or secondary navigation trees. |
+| **`WebsiteSettings`** | — | `firmName`, `activeTemplate`, `templates`, `isEnabled` | Global firm branding, active template, and kill switch. |
+| **`BlogPost`** | `id`, `slug` | `title`, `content`, `excerpt`, `author`, `status`, `publishedAt` | Articles and legal briefs feed. |
+| **`MediaItem`** | `id`, `url` | `name`, `type`, `size`, `alt`, `usedIn` | Universal uploaded assets library. |
 
 ---
 
@@ -619,3 +577,141 @@ npm run build
 # Start production server
 npm start
 ```
+
+---
+
+## 17. Multi-Template Architecture & Flow (Default 1 vs. Default 2)
+
+### 17.1 Architecture Overview
+The platform incorporates a **Dual-Template Engine** allowing administrators to maintain, customize, and preview two radically distinct architectural user interfaces:
+1. **Template 1 (`default1`)**: Classic Corporate Legal UI (*Vanguard & Sterling LLP*), featuring full-bleed hero sliders, 6-block practice area grids, senior partner carousels, and modular dynamic section builders.
+2. **Template 2 (`default2`)**: Editorial Research Chambers UI (*Law Chambers & Legal Research, Kathmandu*), featuring a scholarly ivory/parchment palette (`#F7F6F2`), an animated 5-slot orbital practice area ring, a horizontal continuous marquee ticker, an institutional chronology timeline (2055–2080 B.S.), 13 codified Nepali statutory practice drawers, Supreme Court of Nepal reported judgments index, and categorized statutory guidance FAQs.
+
+### 17.2 Simple Multi-Admin Template Workflow Flowchart
+
+```mermaid
+flowchart TD
+    Start(["Admin Login"]) --> Choice{"Choose Template"}
+
+    %% Template 1 Branch
+    Choice -->|"Select Template 1"| T1Page["Create Page for Template 1"]
+    T1Page --> T1Sec["Add & Reorder Template 1 Sections\n(Classic Hero, Practice Cards, Testimonials)"]
+    T1Sec --> T1Edit["Customize Content, Buttons, Links & Images"]
+
+    %% Template 2 Branch
+    Choice -->|"Select Template 2"| T2Page["Create Page for Template 2"]
+    T2Page --> T2Sec["Add & Reorder Template 2 Sections\n(Orbital Hero, 13 Practice Drawers, Judgments)"]
+    T2Sec --> T2Edit["Customize Content, Buttons, Links & Images"]
+
+    %% Convergence to Preview & Publish
+    T1Edit --> Preview{"Admin Preview & Device Test"}
+    T2Edit --> Preview
+
+    Preview -->|"1-Click Live Switch"| Publish["Publish One Active Template\n(Mutual Exclusivity)"]
+
+    Publish --> Live(["Live Public Website\n(Visitors see Published Template)"])
+```
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    SIMPLE TEMPLATE WORKFLOW                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+  [1. Select Template] ────► Choose Template 1 (Classic) or Template 2 (Editorial)
+           │
+           ▼
+  [2. Create Page]     ────► Enter Page Title & URL slug (e.g. /practice, /about)
+           │
+           ▼
+  [3. Add Sections]    ────► Choose sections tailored to the template & reorder
+           │
+           ▼
+  [4. Edit Content]    ────► Customize headings, text, buttons, links, images
+           │
+           ▼
+  [5. Publish Live]    ────► Activate template (Mutex: 1 live at a time)
+```
+
+### 17.3 System Architecture Diagram
+
+```mermaid
+flowchart TD
+    subgraph AdminLayer ["Admin CMS (/admin/templates & /admin/settings)"]
+        T1Admin["🎨 Template 1 Manager\n(Classic Corporate UI)\n[Edit / Preview / Publish]"]
+        T2Admin["✨ Template 2 Manager\n(Editorial Chambers UI)\n[Edit / Preview / Publish]"]
+        Mutex["🔒 Mutually Exclusive Active Mutex\nsetActiveTemplate('default1' | 'default2')"]
+    end
+
+    subgraph StateLayer ["Unified State Store (cmsStore & localStorage)"]
+        SettingsDB[("WebsiteSettings\nactiveTemplate: 'default1' | 'default2'\ntemplates: { default1, default2 }")]
+    end
+
+    subgraph RouterLayer ["Public Router & Preview Interceptor"]
+        URLReq["HTTP Request\n(e.g. '/' or '/?template=default2')"]
+        ParamCheck{"URL has ?template= ?"}
+        UseParam["Force Preview Slot\n(Show TemplatePreviewBar)"]
+        UseActive["Use Published activeTemplate"]
+        TemplateSwitch{"Resolved Template"}
+    end
+
+    subgraph UILayer ["Front-end Rendering Layer"]
+        T1UI["🏛️ Template 1 View\n(Playfair / Forest Green / Gold)\n• Hero Slider\n• Practice Cards\n• Partner Carousel\n• Testimonials & CTA"]
+        T2UI["📜 Template 2 View\n(Cormorant / Devanagari / Parchment)\n• Rotating Orbital Practice Ring\n• Practice Marquee Ticker\n• 4-Column Statistics Bar\n• Institutional Chronology Timeline\n• 13 Codified Practice Drawers\n• Founder Foreword\n• Partner Dossiers\n• Categorized Statutory FAQs\n• Supreme Court Judgments\n• Chambers Directory & Consultation"]
+    end
+
+    T1Admin --> Mutex
+    T2Admin --> Mutex
+    Mutex -->|"Save activeTemplate"| SettingsDB
+    URLReq --> ParamCheck
+    ParamCheck -->|"Yes"| UseParam
+    ParamCheck -->|"No"| UseActive
+    SettingsDB -. Read activeTemplate .-> UseActive
+    UseParam --> TemplateSwitch
+    UseActive --> TemplateSwitch
+    TemplateSwitch -->|"default1"| T1UI
+    TemplateSwitch -->|"default2"| T2UI
+```
+
+### 17.4 Core Architectural Guarantees
+
+#### 1. Mutual Exclusivity (Single Published Template at a Time)
+* The active template is governed by `settings.activeTemplate` (`'default1' | 'default2'`).
+* When an administrator clicks **"Publish (Make Active)"** for Template 2, `activeTemplate` is atomically set to `'default2'`.
+* Template 1 automatically becomes inactive (standby draft). Its layout, configuration, and data are preserved intact without data loss or interference.
+
+#### 2. Non-Destructive Independent Customization
+* Admin can customize copy, images, and section parameters for Template 1 and Template 2 independently.
+* Customizing Template 2 will never overwrite or disrupt Template 1's sections or layout.
+
+#### 3. Real-Time Admin Preview Mode
+* Any template (even while in draft/inactive standby) can be previewed live at:
+  * `/?template=default1`
+  * `/?template=default2`
+* When a preview query parameter is detected:
+  1. The page renders the requested template regardless of which is currently published.
+  2. The **`TemplatePreviewBar`** sticky banner appears at the top, notifying the admin that they are in preview mode.
+  3. The banner provides a one-click **"Publish This Template Live"** button to promote the draft template to production immediately.
+  4. An **"Exit Preview"** button returns the user to the currently published live site.
+
+#### 4. Integrated Device Viewport Simulation
+* In `/admin/templates`, administrators have an embedded viewport simulator:
+  * **Desktop**: Full responsive width.
+  * **Tablet**: Simulated 768px tablet container.
+  * **Mobile**: Simulated 375px mobile device viewport.
+* Admins can verify responsive typography, orbital card scaling, and drawer collapsing before publishing.
+
+### 17.5 File & Component Mapping
+
+| Component | Path | Description |
+| :--- | :--- | :--- |
+| **Data Repository** | `src/data/firmData.ts` | Complete static data model for Template 2 (all 13 practice areas, firm profile, milestones, judgments, partners, FAQs). |
+| **Template 2 Root** | `src/components/templates/default2/Template2View.tsx` | Master view assembling all Template 2 sections and editorial header/footer. |
+| **Orbital Hero** | `src/components/templates/default2/HeroSection.tsx` | Interactive 5-card orbiting practice area wheel with auto-cycling cards and Nepali watermark. |
+| **Practice Drawers** | `src/components/templates/default2/PracticeAreasSection.tsx` | 13 codified practice areas with bilingual titles, statutory citations, and expandable drawers. |
+| **Milestones Timeline** | `src/components/templates/default2/FirmOverviewSection.tsx` | Vertical chronology timeline from 2055 B.S. (1998) to 2080 B.S. (2023). |
+| **Statutory FAQ** | `src/components/templates/default2/FaqSection.tsx` | Tabbed subject filter with expandable questions and statutory citations. |
+| **Judgments Record** | `src/components/templates/default2/SelectedJudgmentsSection.tsx` | Nepal Kanoon Patrika (NKP) reported Supreme Court decisions. |
+| **Template 1 Root** | `src/components/templates/default1/Template1View.tsx` | Classic Vanguard & Sterling corporate layout. |
+| **Preview Bar** | `src/components/website/TemplatePreviewBar.tsx` | Sticky client preview banner with one-click publish action. |
+| **Template Admin** | `src/app/admin/templates/page.tsx` | Dedicated dashboard for comparing, previewing, and publishing templates. |
+| **Settings Integration** | `src/app/admin/settings/page.tsx` | Radio-group selector for published UI template. |
+

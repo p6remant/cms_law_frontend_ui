@@ -18,6 +18,8 @@ import {
   Sparkles,
   Compass,
   CheckCircle2,
+  Scale,
+  ScrollText,
 } from 'lucide-react';
 
 interface TemplateOption {
@@ -28,10 +30,10 @@ interface TemplateOption {
   defaultSections: Array<{ type: string; name: string; content: any; settings?: any }>;
 }
 
-const TEMPLATES: TemplateOption[] = [
+const TEMPLATES_DEFAULT1: TemplateOption[] = [
   {
     id: 'Landing page',
-    title: 'Landing Page',
+    title: 'Classic Landing Page',
     description: 'High-conversion institutional hero, statistics, practice areas, partner highlights, and CTA.',
     icon: Layout,
     defaultSections: [
@@ -119,109 +121,90 @@ const TEMPLATES: TemplateOption[] = [
               slug: 'corporate-governance',
               shortDescription: 'Boardroom counseling, tender offers, and cross-border transactions.',
             },
-            {
-              id: 'pa-new-2',
-              title: 'Complex Appellate Litigation',
-              slug: 'appellate-litigation',
-              shortDescription: 'Appellate advocacy in state supreme and federal circuit courts.',
-            },
           ],
         },
       },
     ],
   },
   {
-    id: 'Partner listing',
-    title: 'Partner Directory',
-    description: 'Header with grid of senior partner biographies, credentials, and admissions.',
+    id: 'Blank Page T1',
+    title: 'Blank Classic Page',
+    description: 'Start with a completely blank canvas and add sections freely.',
+    icon: Layout,
+    defaultSections: [],
+  },
+];
+
+const TEMPLATES_DEFAULT2: TemplateOption[] = [
+  {
+    id: 't2-full-chambers',
+    title: 'Complete Editorial Chambers Page',
+    description: 'Full layout: Orbital practice wheel, mandates, ticker, statistics, milestones, 13 practice drawers, foreword, partners, and FAQs.',
+    icon: Scale,
+    defaultSections: [
+      { type: 't2-hero', name: 'Orbital Practice Area Hero', content: {} },
+      { type: 't2-highlights', name: 'Statutory Practice Highlights', content: {} },
+      { type: 't2-ticker', name: 'Practice Marquee Ticker', content: {} },
+      { type: 't2-statistics', name: 'Chambers Key Statistics', content: {} },
+      { type: 't2-overview', name: 'The Firm & Milestones Timeline', content: {} },
+      { type: 't2-practice-areas', name: '13 Codified Practice Drawers', content: {} },
+      { type: 't2-foreword', name: "Founder's Foreword", content: {} },
+      { type: 't2-partners', name: 'Partners & Senior Counsel', content: {} },
+      { type: 't2-faq', name: 'Categorized Statutory FAQs', content: {} },
+      { type: 't2-judgments', name: 'Supreme Court Reported Judgments', content: {} },
+      { type: 't2-contact', name: 'Kathmandu Chambers Consultation', content: {} },
+    ],
+  },
+  {
+    id: 't2-practice-page',
+    title: 'Practices & Supreme Court Case Law',
+    description: 'Editorial hero, thirteen codified practice drawers, and reported Supreme Court judgments (NKP).',
+    icon: ScrollText,
+    defaultSections: [
+      { type: 't2-hero', name: 'Orbital Practice Area Hero', content: {} },
+      { type: 't2-practice-areas', name: '13 Codified Practice Drawers', content: {} },
+      { type: 't2-judgments', name: 'Supreme Court Reported Judgments', content: {} },
+      { type: 't2-contact', name: 'Kathmandu Chambers Consultation', content: {} },
+    ],
+  },
+  {
+    id: 't2-chambers-dossier',
+    title: 'Chambers Dossier & Milestones',
+    description: 'Firm history narrative, vertical chronology timeline (2055-2080 B.S.), founder address, and partner dossiers.',
     icon: Users,
     defaultSections: [
-      {
-        type: 'hero',
-        name: 'Partners Header',
-        content: {
-          headline: 'Partners of Distinction',
-          description: 'Distinguished advocates with decades of federal and appellate trial experience.',
-        },
-      },
-      {
-        type: 'partners',
-        name: 'Executive Partnership',
-        content: {
-          title: 'Senior Partners',
-          items: [],
-        },
-      },
+      { type: 't2-overview', name: 'The Firm & Milestones Timeline', content: {} },
+      { type: 't2-foreword', name: "Founder's Foreword", content: {} },
+      { type: 't2-partners', name: 'Partners & Senior Counsel', content: {} },
+      { type: 't2-contact', name: 'Kathmandu Chambers Consultation', content: {} },
     ],
   },
   {
-    id: 'Contact',
-    title: 'Contact & Consultation',
-    description: 'Office registry, direct communication lines, and confidential inquiry intake form.',
-    icon: Mail,
-    defaultSections: [
-      {
-        type: 'hero',
-        name: 'Contact Header',
-        content: {
-          headline: 'Engage With Our Partners',
-          description: 'Direct inquiries to our Manhattan headquarters.',
-        },
-      },
-      {
-        type: 'contact',
-        name: 'Registry Details & Intake Form',
-        content: {
-          title: 'Confidential Matter Submission',
-          address: 'One Rockefeller Plaza, 32nd Floor, New York, NY 10020',
-          phone: '+1 (212) 555-0199',
-          email: 'inquiries@vanguardsterling.com',
-        },
-      },
-    ],
-  },
-  {
-    id: 'FAQ',
-    title: 'Frequently Asked Questions',
-    description: 'Header with accordion Q&A explaining retention, billing, and conflict clearances.',
-    icon: HelpCircle,
-    defaultSections: [
-      {
-        type: 'hero',
-        name: 'FAQ Header',
-        content: {
-          headline: 'Frequently Asked Questions',
-          description: 'Guidance regarding retention criteria and conflict clearance protocols.',
-        },
-      },
-      {
-        type: 'faq',
-        name: 'Engagement FAQs',
-        content: {
-          title: 'General Inquiries',
-          items: [
-            {
-              id: 'q-new-1',
-              question: 'How do I initiate a confidential conflict assessment?',
-              answer: 'Complete our confidential online inquiry form or contact our Managing Partner’s registry directly.',
-            },
-          ],
-        },
-      },
-    ],
+    id: 't2-blank',
+    title: 'Blank Editorial Canvas',
+    description: 'Empty page with Template 2 parchment aesthetic; add sections on demand.',
+    icon: FileText,
+    defaultSections: [],
   },
 ];
 
 export default function CreatePageScreen() {
   const router = useRouter();
-  const { savePage, menus, saveMenu } = useCMS();
+  const { savePage, menus, saveMenu, settings } = useCMS();
 
+  const [templateFamily, setTemplateFamily] = useState<'default2' | 'default1'>(
+    settings.activeTemplate === 'default1' ? 'default1' : 'default2'
+  );
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState('Landing page');
+  const [selectedPresetId, setSelectedPresetId] = useState<string>(
+    templateFamily === 'default2' ? 't2-full-chambers' : 'Landing page'
+  );
   const [isSlugCustomized, setIsSlugCustomized] = useState(false);
   const [addToNavigation, setAddToNavigation] = useState(false);
+
+  const activePresets = templateFamily === 'default2' ? TEMPLATES_DEFAULT2 : TEMPLATES_DEFAULT1;
 
   const handleTitleChange = (val: string) => {
     setTitle(val);
@@ -230,12 +213,17 @@ export default function CreatePageScreen() {
     }
   };
 
+  const handleTemplateFamilyChange = (family: 'default1' | 'default2') => {
+    setTemplateFamily(family);
+    setSelectedPresetId(family === 'default2' ? 't2-full-chambers' : 'Landing page');
+  };
+
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     const finalSlug = slug.trim() || slugify(title);
-    const templateConfig = TEMPLATES.find((t) => t.id === selectedTemplate) || TEMPLATES[0];
+    const templateConfig = activePresets.find((t) => t.id === selectedPresetId) || activePresets[0];
 
     const initialSections: PageSection[] = templateConfig.defaultSections.map((s, idx) => ({
       id: `sec-${Date.now()}-${idx}`,
@@ -244,7 +232,7 @@ export default function CreatePageScreen() {
       order: idx + 1,
       isVisible: true,
       isReusable: false,
-      content: s.content,
+      content: s.content || {},
       settings: s.settings || { containerWidth: 'normal' },
     }));
 
@@ -253,15 +241,15 @@ export default function CreatePageScreen() {
       title: title.trim(),
       slug: finalSlug,
       description: description.trim(),
-      template: selectedTemplate,
+      template: templateFamily,
       status: 'draft',
       isVisible: true,
       sections: initialSections,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       seo: {
-        title: `${title.trim()} | Vanguard & Sterling LLP`,
-        description: description.trim() || `${title.trim()} - Vanguard & Sterling LLP`,
+        title: `${title.trim()} | ${templateFamily === 'default2' ? 'Law Chambers & Legal Research' : 'Vanguard & Sterling LLP'}`,
+        description: description.trim() || `${title.trim()}`,
         robotsIndex: true,
         robotsFollow: true,
       },
@@ -294,27 +282,109 @@ export default function CreatePageScreen() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 pb-12">
       <div>
         <Link
           href="/admin/pages"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-stone-500 hover:text-stone-900 mb-4 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-stone-500 hover:text-stone-900 transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Pages List</span>
+          <span>Back to All Pages</span>
         </Link>
-        <h1 className="text-3xl font-serif font-bold text-stone-900">Create New CMS Page</h1>
-        <p className="text-xs text-stone-500 mt-1">
-          Configure page metadata and select an initial structural layout template
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-stone-900">
+          Create New Website Page
+        </h1>
+        <p className="text-stone-600 text-sm mt-1">
+          Select a template design family, configure the page slug, and assemble sections.
         </p>
       </div>
 
       <form onSubmit={handleCreate} className="space-y-8">
-        {/* Core Metadata card */}
+        {/* Step 1: Select Template Family */}
+        <div className="bg-white p-6 sm:p-8 rounded-xl border border-stone-200 shadow-xs space-y-4">
+          <div className="border-b border-stone-100 pb-3">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-legal-700 block">
+              Step 1 of 3
+            </span>
+            <h2 className="text-base font-semibold text-stone-900 mt-0.5">
+              Select Template Family
+            </h2>
+            <p className="text-xs text-stone-500 mt-0.5">
+              Choose which design system this page will belong to. Multiple admins can build pages for either template independently.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4 pt-1">
+            <div
+              onClick={() => handleTemplateFamilyChange('default2')}
+              className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
+                templateFamily === 'default2'
+                  ? 'border-emerald-600 bg-emerald-50/40 shadow-xs'
+                  : 'border-stone-200 bg-white hover:border-stone-300'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-mono uppercase font-bold text-emerald-800">
+                    Template 2 (Editorial)
+                  </span>
+                  {templateFamily === 'default2' && (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  )}
+                </div>
+                <h3 className="font-serif font-bold text-base text-stone-900">
+                  Law Chambers Editorial UI
+                </h3>
+                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+                  Parchment tones, 13 codified practice drawers, rotating orbital wheel, and chronology timeline.
+                </p>
+              </div>
+              <span className="text-[11px] font-mono text-emerald-700 font-semibold mt-3 block">
+                Cormorant &amp; Devanagari Typography
+              </span>
+            </div>
+
+            <div
+              onClick={() => handleTemplateFamilyChange('default1')}
+              className={`p-5 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
+                templateFamily === 'default1'
+                  ? 'border-legal-800 bg-legal-50/40 shadow-xs'
+                  : 'border-stone-200 bg-white hover:border-stone-300'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-mono uppercase font-bold text-legal-800">
+                    Template 1 (Classic)
+                  </span>
+                  {templateFamily === 'default1' && (
+                    <CheckCircle2 className="w-4 h-4 text-legal-800" />
+                  )}
+                </div>
+                <h3 className="font-serif font-bold text-base text-stone-900">
+                  Classic Corporate Law Firm UI
+                </h3>
+                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+                  Full-bleed hero slider, 6 practice cards grid, senior partner carousel, and gold accents.
+                </p>
+              </div>
+              <span className="text-[11px] font-mono text-legal-700 font-semibold mt-3 block">
+                Playfair Display &amp; Inter Typography
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Step 2: Core Metadata card */}
         <div className="bg-white p-6 sm:p-8 rounded-xl border border-stone-200 shadow-xs space-y-6">
-          <h2 className="text-base font-semibold text-stone-900 border-b border-stone-100 pb-3">
-            Page Details
-          </h2>
+          <div className="border-b border-stone-100 pb-3">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-legal-700 block">
+              Step 2 of 3
+            </span>
+            <h2 className="text-base font-semibold text-stone-900 mt-0.5">
+              Page Details &amp; URL Slug
+            </h2>
+          </div>
 
           <div className="grid sm:grid-cols-2 gap-6">
             <div>
@@ -324,7 +394,7 @@ export default function CreatePageScreen() {
               <input
                 type="text"
                 required
-                placeholder="e.g. Appellate Litigation Brief"
+                placeholder={templateFamily === 'default2' ? "e.g. Statutory Practice Areas" : "e.g. Appellate Litigation Brief"}
                 value={title}
                 onChange={(e) => handleTitleChange(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-legal-700 text-sm"
@@ -342,7 +412,7 @@ export default function CreatePageScreen() {
                 <input
                   type="text"
                   required
-                  placeholder="appellate-litigation"
+                  placeholder="statutory-practice"
                   value={slug}
                   onChange={(e) => {
                     setIsSlugCustomized(true);
@@ -360,7 +430,7 @@ export default function CreatePageScreen() {
             </label>
             <textarea
               rows={2}
-              placeholder="e.g. Specialized appellate practice representing corporate clients in federal circuit and state supreme courts."
+              placeholder="e.g. Detailed practice areas and courtroom advocacy dossiers."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-legal-700 text-sm"
@@ -368,7 +438,7 @@ export default function CreatePageScreen() {
           </div>
 
           {/* Navigation Integration Checkbox */}
-          <div className="pt-4 border-t border-stone-100">
+          <div className="pt-2">
             <label className="flex items-start gap-3 p-3.5 rounded-lg border border-stone-200 bg-stone-50/70 hover:bg-stone-50 cursor-pointer transition-colors">
               <input
                 type="checkbox"
@@ -382,38 +452,36 @@ export default function CreatePageScreen() {
                   <span>Also add this page to Header Navigation Menu</span>
                 </div>
                 <p className="text-stone-500 mt-0.5 leading-relaxed">
-                  Automatically appends a link for this page in the main website navigation bar. You can reorder or nest it under dropdowns anytime in Navigation settings.
+                  Automatically appends a link for this page in the main website navigation bar.
                 </p>
-                {addToNavigation && title.trim() && (
-                  <div className="mt-2 text-[11px] font-mono text-legal-700 bg-legal-100/50 px-2 py-1 rounded inline-block">
-                    ↳ Will link to: /{slug || slugify(title)} with label &quot;{title}&quot;
-                  </div>
-                )}
               </div>
             </label>
           </div>
         </div>
 
-        {/* Template Selector Card */}
+        {/* Step 3: Starting Section Preset */}
         <div className="bg-white p-6 sm:p-8 rounded-xl border border-stone-200 shadow-xs space-y-6">
-          <div>
-            <h2 className="text-base font-semibold text-stone-900">
-              Select Starting Template
+          <div className="border-b border-stone-100 pb-3">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-legal-700 block">
+              Step 3 of 3
+            </span>
+            <h2 className="text-base font-semibold text-stone-900 mt-0.5">
+              Select Starting Section Preset ({templateFamily === 'default2' ? 'Template 2' : 'Template 1'})
             </h2>
-            <p className="text-xs text-stone-500 mt-1">
-              Templates establish an initial section layout. You can freely add, modify, reorder, or remove sections in the Section Builder.
+            <p className="text-xs text-stone-500 mt-0.5">
+              Choose initial sections to bootstrap this page. You can freely add, reorder, or edit sections in the Section Builder.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            {TEMPLATES.map((tpl) => {
+            {activePresets.map((tpl) => {
               const Icon = tpl.icon;
-              const isSelected = selectedTemplate === tpl.id;
+              const isSelected = selectedPresetId === tpl.id;
 
               return (
                 <div
                   key={tpl.id}
-                  onClick={() => setSelectedTemplate(tpl.id)}
+                  onClick={() => setSelectedPresetId(tpl.id)}
                   className={`p-5 rounded-lg border cursor-pointer transition-all flex items-start gap-4 ${
                     isSelected
                       ? 'border-legal-700 bg-legal-50/40 ring-2 ring-legal-700/20 shadow-xs'
@@ -422,16 +490,28 @@ export default function CreatePageScreen() {
                 >
                   <div
                     className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
-                      isSelected ? 'bg-legal-700 text-white' : 'bg-stone-100 text-stone-600'
+                      isSelected
+                        ? 'bg-legal-800 text-white'
+                        : 'bg-stone-100 text-stone-600'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-stone-900">{tpl.title}</h3>
-                    <p className="text-xs text-stone-500 mt-1 leading-relaxed">{tpl.description}</p>
-                    <span className="text-[11px] font-mono text-legal-700 mt-2 block font-medium">
-                      {tpl.defaultSections.length} starting sections
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-serif font-bold text-sm text-stone-900">
+                        {tpl.title}
+                      </h3>
+                      {isSelected && (
+                        <CheckCircle2 className="w-4 h-4 text-legal-700" />
+                      )}
+                    </div>
+                    <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+                      {tpl.description}
+                    </p>
+                    <span className="text-[10px] font-mono text-legal-600 font-semibold block mt-2">
+                      {tpl.defaultSections.length} Initial Section{tpl.defaultSections.length === 1 ? '' : 's'}
                     </span>
                   </div>
                 </div>
@@ -440,19 +520,21 @@ export default function CreatePageScreen() {
           </div>
         </div>
 
-        {/* Submit Bar */}
-        <div className="flex items-center justify-end gap-4 pt-4">
+        {/* Submit Actions */}
+        <div className="flex items-center justify-between pt-4 border-t border-stone-200">
           <Link
             href="/admin/pages"
-            className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-stone-600 hover:text-stone-900 transition-colors"
+            className="text-stone-600 hover:text-stone-900 text-xs font-semibold uppercase tracking-wider transition-colors"
           >
             Cancel
           </Link>
+
           <button
             type="submit"
-            className="px-6 py-2.5 rounded-lg bg-legal-800 hover:bg-legal-700 text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-xs"
+            disabled={!title.trim()}
+            className="px-6 py-3 rounded-lg bg-legal-800 text-white text-xs font-semibold uppercase tracking-wider hover:bg-legal-700 transition-colors shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
-            Create Page & Open Section Builder
+            Create Page &amp; Open Section Builder →
           </button>
         </div>
       </form>

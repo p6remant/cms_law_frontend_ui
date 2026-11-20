@@ -39,7 +39,18 @@ export type SectionType =
   | 'contact'
   | 'latestArticles'
   | 'gallery'
-  | 'statistics';
+  | 'statistics'
+  | 't2-hero'
+  | 't2-highlights'
+  | 't2-ticker'
+  | 't2-statistics'
+  | 't2-overview'
+  | 't2-practice-areas'
+  | 't2-foreword'
+  | 't2-partners'
+  | 't2-faq'
+  | 't2-judgments'
+  | 't2-contact';
 
 export interface SliderSectionContent {
   eyebrow?: string;
@@ -361,6 +372,23 @@ export interface ContentRecord {
   updatedAt: string;
 }
 
+export type TemplateId = 'default1' | 'default2';
+
+export interface TemplateDefinition {
+  id: TemplateId;
+  name: string;
+  code: string;
+  tagline: string;
+  description: string;
+  style: string;
+  previewUrl: string;
+  themeColor: string;
+  isPublished: boolean;
+  version: string;
+  lastModified?: string;
+  author?: string;
+}
+
 export interface WebsiteSettings {
   name: string;
   tagline: string;
@@ -370,6 +398,14 @@ export interface WebsiteSettings {
   defaultLanguage: string;
   timezone: string;
   isEnabled: boolean; // whole site master switch
+  activeTemplate: TemplateId; // Single active published template mutex ('default1' | 'default2')
+  templates?: Partial<Record<TemplateId, {
+    name?: string;
+    description?: string;
+    lastUpdated?: string;
+    isCustomized?: boolean;
+    customSettings?: Record<string, any>;
+  }>>;
   header: {
     isVisible: boolean;
     navigationId?: string;

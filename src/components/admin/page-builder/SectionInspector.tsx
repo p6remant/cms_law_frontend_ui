@@ -629,6 +629,46 @@ export const SectionInspector: React.FC<SectionInspectorProps> = ({
       {/* ========================================================= */}
       {subTab === 'content' && (
         <div className="p-6 space-y-4">
+          {/* Heading (Template 2) */}
+          {section.content.heading !== undefined && (
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Section Heading</label>
+              <input
+                type="text"
+                placeholder="e.g. Practice areas."
+                value={section.content.heading ?? ''}
+                onChange={(e) => onUpdateContent({ ...section.content, heading: e.target.value })}
+                className="w-full px-3 py-2 text-xs rounded-lg border border-stone-300 focus:outline-none focus:ring-1 focus:ring-legal-700"
+              />
+            </div>
+          )}
+
+          {/* 2-Line Hero Display Headlines */}
+          {section.content.headlineLine1 !== undefined && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Display Line 1</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Defending for"
+                  value={section.content.headlineLine1 ?? ''}
+                  onChange={(e) => onUpdateContent({ ...section.content, headlineLine1: e.target.value })}
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-stone-300"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Display Line 2 (Italic Accent)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. impartial justice."
+                  value={section.content.headlineLine2 ?? ''}
+                  onChange={(e) => onUpdateContent({ ...section.content, headlineLine2: e.target.value })}
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-stone-300"
+                />
+              </div>
+            </div>
+          )}
+
           {/* Headline or Section Title */}
           {(section.content.title !== undefined || section.content.headline !== undefined) && (
             <div>
@@ -692,6 +732,105 @@ export const SectionInspector: React.FC<SectionInspectorProps> = ({
                 onChange={(e) => onUpdateContent({ ...section.content, description: e.target.value })}
                 className="w-full px-3 py-2 text-xs rounded-lg border border-stone-300 focus:outline-none focus:ring-1 focus:ring-legal-700 leading-relaxed"
               />
+            </div>
+          )}
+
+          {/* Lead Paragraph */}
+          {section.content.lead !== undefined && (
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Lead Introductory Text</label>
+              <textarea
+                rows={2}
+                placeholder="e.g. A full-service law firm practising in Nepal since 1998..."
+                value={section.content.lead ?? ''}
+                onChange={(e) => onUpdateContent({ ...section.content, lead: e.target.value })}
+                className="w-full px-3 py-2 text-xs rounded-lg border border-stone-300"
+              />
+            </div>
+          )}
+
+          {/* Pull Quote */}
+          {section.content.pullQuote !== undefined && (
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Pull Quote / Creed</label>
+              <textarea
+                rows={2}
+                placeholder="e.g. “Law is not only about resolving disputes. It is about building trust...”"
+                value={section.content.pullQuote ?? ''}
+                onChange={(e) => onUpdateContent({ ...section.content, pullQuote: e.target.value })}
+                className="w-full px-3 py-2 text-xs italic rounded-lg border border-stone-300 font-serif"
+              />
+            </div>
+          )}
+
+          {/* Devanagari / Nepali Subtitle / Watermark */}
+          {(section.content.nepaliEyebrow !== undefined || section.content.nepaliName !== undefined) && (
+            <div>
+              <label className="block text-xs font-semibold text-stone-700 mb-1">Nepali Subtitle / Devanagari Watermark</label>
+              <input
+                type="text"
+                placeholder="e.g. न्याय or ल चेम्बर्स एण्ड रिसर्च सेन्टर"
+                value={section.content.nepaliEyebrow ?? section.content.nepaliName ?? ''}
+                onChange={(e) => {
+                  if (section.content.nepaliEyebrow !== undefined) {
+                    onUpdateContent({ ...section.content, nepaliEyebrow: e.target.value });
+                  } else {
+                    onUpdateContent({ ...section.content, nepaliName: e.target.value });
+                  }
+                }}
+                className="w-full px-3 py-2 text-xs rounded-lg border border-stone-300 font-sans"
+              />
+            </div>
+          )}
+
+          {/* Primary & Secondary Buttons (Template 2) */}
+          {section.content.primaryCtaLabel !== undefined && (
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Primary Button Label</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Contact the Firm"
+                  value={section.content.primaryCtaLabel ?? ''}
+                  onChange={(e) => onUpdateContent({ ...section.content, primaryCtaLabel: e.target.value })}
+                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-300"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Primary Button Link</label>
+                <input
+                  type="text"
+                  placeholder="e.g. #contact"
+                  value={section.content.primaryCtaHref ?? ''}
+                  onChange={(e) => onUpdateContent({ ...section.content, primaryCtaHref: e.target.value })}
+                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-300 font-mono"
+                />
+              </div>
+            </div>
+          )}
+
+          {section.content.secondaryCtaLabel !== undefined && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Secondary Button Label</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Our Practice"
+                  value={section.content.secondaryCtaLabel ?? ''}
+                  onChange={(e) => onUpdateContent({ ...section.content, secondaryCtaLabel: e.target.value })}
+                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-300"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">Secondary Button Link</label>
+                <input
+                  type="text"
+                  placeholder="e.g. #practice-areas"
+                  value={section.content.secondaryCtaHref ?? ''}
+                  onChange={(e) => onUpdateContent({ ...section.content, secondaryCtaHref: e.target.value })}
+                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-stone-300 font-mono"
+                />
+              </div>
             </div>
           )}
 

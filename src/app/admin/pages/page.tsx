@@ -101,7 +101,11 @@ export default function PagesListPage() {
             >
               {templates.map((tpl) => (
                 <option key={tpl} value={tpl}>
-                  {tpl}
+                  {tpl === 'All'
+                    ? 'All Templates'
+                    : tpl === 'default2'
+                    ? 'Template 2 (Editorial)'
+                    : 'Template 1 (Classic)'}
                 </option>
               ))}
             </select>
@@ -155,9 +159,17 @@ export default function PagesListPage() {
                   </td>
 
                   <td className="py-4 px-6">
-                    <span className="px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 text-[11px] font-medium">
-                      {page.template}
-                    </span>
+                    {page.template === 'default2' ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-semibold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                        Template 2 (Editorial)
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-legal-50 text-legal-900 border border-legal-200 text-[11px] font-semibold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-legal-700" />
+                        Template 1 (Classic)
+                      </span>
+                    )}
                   </td>
 
                   <td className="py-4 px-6">

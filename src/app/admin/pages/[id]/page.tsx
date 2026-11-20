@@ -797,6 +797,7 @@ export default function PageBuilderScreen() {
         isOpen={sectionModalOpen}
         onSelect={handleAddSectionFromLibrary}
         onClose={() => setSectionModalOpen(false)}
+        currentTemplate={page.template}
       />
 
       {/* Delete Section Confirm Modal */}
@@ -816,6 +817,20 @@ export default function PageBuilderScreen() {
 // Helpers for default labels & contents
 function getDefaultNameForType(type: SectionType): string {
   switch (type) {
+    // Template 2 Specific
+    case 't2-hero': return 'Orbital Practice Area Hero';
+    case 't2-highlights': return 'Statutory Practice Highlights';
+    case 't2-ticker': return 'Practice Marquee Ticker';
+    case 't2-statistics': return 'Chambers Benchmarks & Stats';
+    case 't2-overview': return 'Institutional Milestones Timeline';
+    case 't2-practice-areas': return '13 Codified Practice Drawers';
+    case 't2-foreword': return "Founder's Foreword Address";
+    case 't2-partners': return 'Partners & Senior Counsel';
+    case 't2-faq': return 'Categorized Statutory FAQs';
+    case 't2-judgments': return 'Supreme Court Reported Judgments';
+    case 't2-contact': return 'Kathmandu Chambers Consultation';
+
+    // Template 1 & Shared
     case 'hero': return 'Hero Header';
     case 'slider':
     case 'carousel': return 'Case Showcase Carousel';
@@ -836,6 +851,75 @@ function getDefaultNameForType(type: SectionType): string {
 
 function getDefaultContentForType(type: SectionType): Record<string, any> {
   switch (type) {
+    // Template 2 Section Defaults
+    case 't2-hero':
+      return {
+        eyebrow: 'RAMSHAH PATH, KATHMANDU',
+        nepaliEyebrow: 'न्याय',
+        headlineLine1: 'Defending for',
+        headlineLine2: 'impartial justice.',
+        lead: 'A full-service law firm practising in Nepal since 1998 — in the courts, and in the drafting of the statutes those courts apply.',
+        primaryCtaLabel: 'Contact the Firm',
+        primaryCtaHref: '#contact',
+        secondaryCtaLabel: 'Our Practice',
+        secondaryCtaHref: '#practice-areas',
+      };
+    case 't2-highlights':
+      return {
+        eyebrow: 'Law Chambers · Core Mandates',
+        heading: 'Principal areas of statutory & courtroom practice.',
+        description: 'Select a principal practice group below to examine the governing Nepali statute and scope of representation.',
+      };
+    case 't2-ticker':
+      return { title: 'Practice Marquee Ticker' };
+    case 't2-statistics':
+      return { title: 'Firm Benchmarks & Key Metrics' };
+    case 't2-overview':
+      return {
+        eyebrow: '01 / THE FIRM',
+        heading: 'An enduring tradition of disciplined legal scholarship and courtroom advocacy.',
+        leadParagraph: 'Law Chambers & Legal Research was established with a singular premise: that effective advocacy before the courts of Nepal requires rigorous preparation in primary statutory texts, comparative jurisprudence, and procedural discipline.',
+      };
+    case 't2-practice-areas':
+      return {
+        eyebrow: '02 / What We Do',
+        heading: 'Practice areas.',
+        description: 'Our chambers provide advisory, transactional, and courtroom representation across thirteen codified areas of Nepali law.',
+      };
+    case 't2-foreword':
+      return {
+        eyebrow: '03 / FOREWORD',
+        heading: 'A word from our founder.',
+        pullQuote: '“Law is not only about resolving disputes. It is about building trust, protecting rights, and advancing society.”',
+        founderName: 'Devendra Raj Acharya',
+        nepaliName: 'वरिष्ठ अधिवक्ता देवेन्द्र राज आचार्य',
+        designation: 'Senior Advocate, Founder and Senior Partner',
+        credentials: 'B.L. (Tribhuvan University), LL.M. (Constitutional & Commercial Law)',
+      };
+    case 't2-partners':
+      return {
+        eyebrow: '04 / The Partners',
+        heading: 'Partners & senior counsel.',
+        description: 'Each brief accepted by our chambers is supervised directly by a partner admitted to practice before the Courts of Nepal.',
+      };
+    case 't2-faq':
+      return {
+        eyebrow: '05 / Questions & Statutory Guidance',
+        heading: 'Frequently asked questions.',
+        description: 'Responses below outline general statutory procedures under Nepali law for informational reference only.',
+      };
+    case 't2-judgments':
+      return {
+        eyebrow: '06 / From the Record',
+        heading: 'Selected Supreme Court judgments.',
+        description: 'A curated index of reported decisions published in the Nepal Kanoon Patrika (NKP) of relevance to civil transactions and commercial arbitration.',
+      };
+    case 't2-contact':
+      return {
+        eyebrow: '07 / Confidential Consultation',
+        heading: 'Inquire with our chambers in Kathmandu.',
+        description: 'To arrange an in-person or virtual legal consultation, please contact the chambers secretariat by telephone or written correspondence.',
+      };
     case 'hero':
       return {
         headline: 'Decisive Legal Counsel',

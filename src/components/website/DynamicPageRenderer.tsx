@@ -14,10 +14,15 @@ interface DynamicPageProps {
 export const DynamicPageRenderer: React.FC<DynamicPageProps> = ({ slug, pageId }) => {
   const { pages, settings, isEffectivePageVisible, isEffectiveSectionVisible, isLoaded } = useCMS();
 
-  // Find page by ID or slug
+  const activeTemplate = settings.activeTemplate || 'default1';
+
+  // Find page by ID or slug prioritizing matching active template
   const page = pageId
     ? pages.find((p) => p.id === pageId)
-    : pages.find((p) => (slug === '' ? p.slug === '' || p.slug === '/' : p.slug === slug));
+    : pages.find((p) => {
+        const matchesSlug = slug === '' ? p.slug === '' || p.slug === '/' : p.slug === slug;
+        return matchesSlug && (p.template ? p.template === activeTemplate : true);
+      }) || pages.find((p) => (slug === '' ? p.slug === '' || p.slug === '/' : p.slug === slug));
 
   if (!isLoaded) {
     return (

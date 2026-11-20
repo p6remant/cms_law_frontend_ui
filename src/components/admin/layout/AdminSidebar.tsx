@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
+  LayoutTemplate,
   FileText,
   Layers,
   Database,
@@ -39,6 +40,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({ isOpen, onCloseMobile }) 
     {
       label: 'Website Management',
       items: [
+        { label: 'Templates & Themes', href: '/admin/templates', icon: LayoutTemplate },
         { label: 'Pages', href: '/admin/pages', icon: FileText },
         { label: 'Sections', href: '/admin/sections', icon: Layers },
         { label: 'Content', href: '/admin/content', icon: Database },
